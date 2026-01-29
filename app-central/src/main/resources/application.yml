@@ -7,7 +7,7 @@ spring:
 
   # Base de datos
   datasource:
-    url: jdbc:mysql://localhost:3307/onboarding_central?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:10306/onboarding_central?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,7 +24,7 @@ spring:
   # RabbitMQ
   rabbitmq:
     host: localhost
-    port: 5673
+    port: 10672
     username: guest
     password: guest
 
@@ -37,7 +37,7 @@ spring:
 # Temporal
 temporal:
   service:
-    address: localhost:7233
+    address: localhost:10233
   namespace: default
 
 # Logging

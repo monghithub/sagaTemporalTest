@@ -1,0 +1,193 @@
+# Docker Compose - Aplicación completa
+# Uso: docker compose up --build
+#
+# PUERTOS:
+#   MySQL:          10306
+#   RabbitMQ:       10672 (AMQP), 10673 (Management)
+#   Temporal:       10233
+#   Temporal UI:    10088
+#   App Central:    10080
+#   Service LDAP:   10081
+#   Service Email:  10082
+#   Service Sist:   10083
+#   Service Equip:  10084
+
+services:
+  # =============================================================================
+  # INFRAESTRUCTURA
+  # =============================================================================
+  mysql:
+    image: mysql:8.0
+    container_name: onboarding-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: onboarding
+    ports:
+      - "10306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - onboarding-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: onboarding-rabbitmq
+    ports:
+      - "10672:5672"
+      - "10673:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - onboarding-network
+
+  temporal:
+    image: temporalio/auto-setup:1.22.4
+    container_name: onboarding-temporal
+    ports:
+      - "10233:7233"
+    environment:
+      - DB=mysql8
+      - MYSQL_SEEDS=mysql
+      - MYSQL_USER=root
+      - MYSQL_PWD=root
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - onboarding-network
+
+  temporal-ui:
+    image: temporalio/ui:2.22.3
+    container_name: onboarding-temporal-ui
+    ports:
+      - "10088:8080"
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:10080
+    depends_on:
+      - temporal
+    networks:
+      - onboarding-network
+
+  # =============================================================================
+  # APLICACIONES
+  # =============================================================================
+  app-central:
+    build: ./app-central
+    container_name: onboarding-app-central
+    ports:
+      - "10080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/onboarding_central?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - TEMPORAL_SERVICE_ADDRESS=temporal:7233
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    networks:
+      - onboarding-network
+
+  service-ldap:
+    build: ./service-ldap
+    container_name: onboarding-service-ldap
+    ports:
+      - "10081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/onboarding_ldap?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - onboarding-network
+
+  service-email:
+    build: ./service-email
+    container_name: onboarding-service-email
+    ports:
+      - "10082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/onboarding_email?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - onboarding-network
+
+  service-sistemas:
+    build: ./service-sistemas
+    container_name: onboarding-service-sistemas
+    ports:
+      - "10083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/onboarding_sistemas?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - onboarding-network
+
+  service-equipamiento:
+    build: ./service-equipamiento
+    container_name: onboarding-service-equipamiento
+    ports:
+      - "10084:8084"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/onboarding_equip?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - onboarding-network
+
+volumes:
+  mysql_data:
+  rabbitmq_data:
+
+networks:
+  onboarding-network:
+    driver: bridge

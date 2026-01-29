@@ -1,11 +1,11 @@
 # Docker Compose - Solo Infraestructura (para desarrollo local)
 # Uso: docker compose -f docker-compose.infra.yml up -d
 #
-# PUERTOS CONFIGURADOS (para evitar conflictos con otros proyectos):
-#   MySQL: 3307
-#   RabbitMQ: 5673 (AMQP), 15673 (Management)
-#   Temporal: 7233
-#   Temporal UI: 8088
+# PUERTOS:
+#   MySQL:          10306
+#   RabbitMQ:       10672 (AMQP), 10673 (Management)
+#   Temporal:       10233
+#   Temporal UI:    10088
 
 services:
   # =============================================================================
@@ -18,7 +18,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: onboarding
     ports:
-      - "3307:3306"
+      - "10306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -37,8 +37,8 @@ services:
     image: rabbitmq:3-management
     container_name: onboarding-rabbitmq
     ports:
-      - "5673:5672"   # AMQP
-      - "15673:15672" # Management UI
+      - "10672:5672"
+      - "10673:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -59,7 +59,7 @@ services:
     image: temporalio/auto-setup:1.22.4
     container_name: onboarding-temporal
     ports:
-      - "7233:7233" # gRPC
+      - "10233:7233"
     environment:
       - DB=mysql8
       - MYSQL_SEEDS=mysql
@@ -78,10 +78,10 @@ services:
     image: temporalio/ui:2.22.3
     container_name: onboarding-temporal-ui
     ports:
-      - "8088:8080"
+      - "10088:8080"
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+      - TEMPORAL_CORS_ORIGINS=http://localhost:10080
     depends_on:
       - temporal
     networks:
