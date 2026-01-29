@@ -56,6 +56,13 @@ public class PeticionEmail {
     @Column(name = "procesado_por", length = 100)
     private String procesadoPor;
 
+    @Builder.Default
+    @Column(name = "compensada", nullable = false)
+    private Boolean compensada = false;
+
+    @Column(name = "fecha_compensacion")
+    private LocalDateTime fechaCompensacion;
+
     // Generar email corporativo a partir del nombre
     public void generarEmailCorporativo() {
         if (empleadoNombre != null) {
@@ -83,5 +90,10 @@ public class PeticionEmail {
         this.motivoDenegacion = motivo;
         this.fechaProcesamiento = LocalDateTime.now();
         this.procesadoPor = procesadoPor;
+    }
+
+    public void marcarComoCompensada() {
+        this.compensada = true;
+        this.fechaCompensacion = LocalDateTime.now();
     }
 }

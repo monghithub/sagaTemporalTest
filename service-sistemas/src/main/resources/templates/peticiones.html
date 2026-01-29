@@ -149,6 +149,9 @@
                                       th:classappend="${peticion.estado.name() == 'APROBADA'} ? 'bg-success' : 'bg-danger'">
                                     [[${peticion.estado}]]
                                 </span>
+                                <span th:if="${peticion.compensada}" class="badge bg-danger ms-1">
+                                    ROLLBACK
+                                </span>
                             </td>
                             <td>[[${#temporals.format(peticion.fechaProcesamiento, 'dd/MM HH:mm')}]]</td>
                             <td>[[${peticion.procesadoPor}]]</td>

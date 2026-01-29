@@ -181,7 +181,8 @@ App Central                    RabbitMQ                    Service Mock
 ```
 
 **Resultado de la compensación:**
-- Los datos de la petición se **eliminan permanentemente** de la BD del servicio
+- Los datos de la petición se **marcan como compensados** (`compensada=true`)
+- El registro **permanece en la BD** para auditoría con badge "ROLLBACK" en rojo
 - El workflow recibe confirmación de que la compensación se completó
 - El proceso continúa con la siguiente compensación (orden inverso)
 
@@ -346,12 +347,14 @@ PETICIÓN RECIBIDA (queue.xxx.request)
 
 **Resumen del estado de datos:**
 
-| Escenario | Estado en BD del Servicio |
-|-----------|---------------------------|
-| Petición pendiente | Registro con `estado=PENDIENTE` |
-| Paso aprobado | Registro con `estado=APROBADA` (persiste) |
-| Paso denegado | Registro con `estado=DENEGADA` (persiste) |
-| Compensación ejecutada | **Registro ELIMINADO de la BD** |
+| Escenario | Estado en BD del Servicio | UI |
+|-----------|---------------------------|-----|
+| Petición pendiente | `estado=PENDIENTE` | Badge amarillo |
+| Paso aprobado | `estado=APROBADA` | Badge verde |
+| Paso denegado | `estado=DENEGADA` | Badge rojo |
+| Compensación ejecutada | `estado=APROBADA, compensada=true` | Badge verde + **ROLLBACK** rojo |
+
+> **Nota:** El registro NO se elimina, se marca como `compensada=true` para mantener trazabilidad.
 
 ### 6. Consistencia Eventual
 

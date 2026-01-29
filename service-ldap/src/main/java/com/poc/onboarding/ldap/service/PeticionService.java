@@ -102,10 +102,11 @@ public class PeticionService {
     }
 
     @Transactional
-    public void eliminarPorWorkflowId(String workflowId) {
+    public void marcarComoCompensada(String workflowId) {
         repository.findByWorkflowId(workflowId).ifPresent(peticion -> {
-            repository.delete(peticion);
-            log.info("Petición LDAP eliminada por compensación. WorkflowId: {}", workflowId);
+            peticion.marcarComoCompensada();
+            repository.save(peticion);
+            log.info("Petición LDAP marcada como ROLLBACK. WorkflowId: {}", workflowId);
         });
     }
 }

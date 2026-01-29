@@ -52,8 +52,8 @@ public class EquipamientoRequestListener {
         log.info("Recibida compensación EQUIPAMIENTO: {} - Usuario a eliminar: {}",
                 event.getPeticionId(), event.getEmpleado().getUsernameGenerado());
 
-        // Eliminar la petición de la base de datos
-        peticionService.eliminarPorWorkflowId(event.getWorkflowId());
+        // Marcar la petición como compensada (ROLLBACK)
+        peticionService.marcarComoCompensada(event.getWorkflowId());
 
         // Enviar respuesta de compensación completada
         Map<String, Object> datos = new HashMap<>();
@@ -73,6 +73,6 @@ public class EquipamientoRequestListener {
                 response
         );
 
-        log.info("Compensación EQUIPAMIENTO {} completada - registro eliminado de BD", event.getPeticionId());
+        log.info("Compensación EQUIPAMIENTO {} completada - registro marcado como ROLLBACK", event.getPeticionId());
     }
 }

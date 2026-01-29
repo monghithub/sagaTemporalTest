@@ -54,7 +54,10 @@ Peticion recibida → INSERT (PENDIENTE) → Aprobacion → UPDATE (APROBADA)
                                     [Paso posterior denegado]
                                                             │
                                                             ▼
-                                    Compensacion recibida → DELETE → Dato ELIMINADO
+                                    Compensacion recibida → UPDATE (compensada=true)
+                                                            │
+                                                            ▼
+                                    Dato PERSISTE con marca de ROLLBACK
 ```
 
 ### Que Pasa en Cada Escenario
@@ -63,11 +66,11 @@ Peticion recibida → INSERT (PENDIENTE) → Aprobacion → UPDATE (APROBADA)
 |-----------|------|-------|----------|--------------|---------|
 | **Todo aprobado** | APROBADA | APROBADA | APROBADA | APROBADA | COMPLETADO |
 | **Denegado en LDAP** | DENEGADA | - | - | - | ROLLBACK |
-| **Denegado en Email** | ~~ELIMINADO~~ | DENEGADA | - | - | ROLLBACK |
-| **Denegado en Sistemas** | ~~ELIMINADO~~ | ~~ELIMINADO~~ | DENEGADA | - | ROLLBACK |
-| **Denegado en Equipamiento** | ~~ELIMINADO~~ | ~~ELIMINADO~~ | ~~ELIMINADO~~ | DENEGADA | ROLLBACK |
+| **Denegado en Email** | APROBADA+ROLLBACK | DENEGADA | - | - | ROLLBACK |
+| **Denegado en Sistemas** | APROBADA+ROLLBACK | APROBADA+ROLLBACK | DENEGADA | - | ROLLBACK |
+| **Denegado en Equipamiento** | APROBADA+ROLLBACK | APROBADA+ROLLBACK | APROBADA+ROLLBACK | DENEGADA | ROLLBACK |
 
-> ~~ELIMINADO~~ significa que el registro fue borrado de la BD por la compensacion.
+> **APROBADA+ROLLBACK** significa que el registro mantiene su estado original pero tiene `compensada=true`, mostrando badge rojo "ROLLBACK" en la UI.
 
 ### Verificar Estado tras Rollback
 
@@ -75,12 +78,27 @@ Peticion recibida → INSERT (PENDIENTE) → Aprobacion → UPDATE (APROBADA)
 -- Ver procesos con rollback
 SELECT * FROM onboarding_central.proceso_onboarding WHERE estado = 'ROLLBACK';
 
--- Verificar que no hay datos en servicios compensados
--- (Estas consultas deberian devolver 0 filas para workflows con rollback)
-SELECT * FROM onboarding_ldap.peticion_ldap WHERE workflow_id = 'onboarding-xxx';
-SELECT * FROM onboarding_email.peticion_email WHERE workflow_id = 'onboarding-xxx';
-SELECT * FROM onboarding_sistemas.peticion_sistemas WHERE workflow_id = 'onboarding-xxx';
-SELECT * FROM onboarding_equip.peticion_equipamiento WHERE workflow_id = 'onboarding-xxx';
+-- Ver peticiones compensadas (marcadas con ROLLBACK)
+SELECT id, empleado_nombre, estado, compensada, fecha_compensacion
+FROM onboarding_ldap.peticion_ldap WHERE compensada = true;
+
+SELECT id, empleado_nombre, estado, compensada, fecha_compensacion
+FROM onboarding_email.peticion_email WHERE compensada = true;
+
+SELECT id, empleado_nombre, estado, compensada, fecha_compensacion
+FROM onboarding_sistemas.peticion_sistemas WHERE compensada = true;
+
+SELECT id, empleado_nombre, estado, compensada, fecha_compensacion
+FROM onboarding_equip.peticion_equipamiento WHERE compensada = true;
+
+-- Ver todas las peticiones de un workflow con su estado de compensacion
+SELECT 'LDAP' as servicio, estado, compensada FROM onboarding_ldap.peticion_ldap WHERE workflow_id = 'onboarding-xxx'
+UNION ALL
+SELECT 'EMAIL', estado, compensada FROM onboarding_email.peticion_email WHERE workflow_id = 'onboarding-xxx'
+UNION ALL
+SELECT 'SISTEMAS', estado, compensada FROM onboarding_sistemas.peticion_sistemas WHERE workflow_id = 'onboarding-xxx'
+UNION ALL
+SELECT 'EQUIPAMIENTO', estado, compensada FROM onboarding_equip.peticion_equipamiento WHERE workflow_id = 'onboarding-xxx';
 ```
 
 ## Consultas Utiles

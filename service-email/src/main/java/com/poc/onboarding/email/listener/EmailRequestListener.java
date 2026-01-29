@@ -52,8 +52,8 @@ public class EmailRequestListener {
         log.info("Recibida compensación EMAIL: {} - Email a eliminar: {}",
                 event.getPeticionId(), event.getEmpleado().getEmailCorporativo());
 
-        // Eliminar la petición de la base de datos
-        peticionService.eliminarPorWorkflowId(event.getWorkflowId());
+        // Marcar la petición como compensada (ROLLBACK)
+        peticionService.marcarComoCompensada(event.getWorkflowId());
 
         // Enviar respuesta de compensación completada
         Map<String, Object> datos = new HashMap<>();
@@ -73,6 +73,6 @@ public class EmailRequestListener {
                 response
         );
 
-        log.info("Compensación EMAIL {} completada - registro eliminado de BD", event.getPeticionId());
+        log.info("Compensación EMAIL {} completada - registro marcado como ROLLBACK", event.getPeticionId());
     }
 }
