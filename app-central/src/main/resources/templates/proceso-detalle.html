@@ -134,8 +134,8 @@
                     <!-- Links útiles -->
                     <hr>
                     <p class="mb-2"><strong>Enlaces útiles:</strong></p>
-                    <a th:href="'http://localhost:10088/namespaces/default/workflows/' + ${proceso.workflowId}"
-                       target="_blank" class="btn btn-outline-secondary btn-sm me-2">
+                    <a id="linkTemporalWorkflow" th:data-workflow-id="${proceso.workflowId}"
+                       href="#" target="_blank" class="btn btn-outline-secondary btn-sm me-2">
                         <i class="bi bi-diagram-3"></i> Ver en Temporal UI
                     </a>
                 </div>
@@ -188,28 +188,42 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <a href="http://localhost:10081" target="_blank" class="btn btn-outline-primary w-100">
+                    <a id="linkLDAP" href="#" target="_blank" class="btn btn-outline-primary w-100">
                         <i class="bi bi-person"></i> LDAP (10081)
                     </a>
                 </div>
                 <div class="col-md-3">
-                    <a href="http://localhost:10082" target="_blank" class="btn btn-outline-primary w-100">
+                    <a id="linkEmail" href="#" target="_blank" class="btn btn-outline-primary w-100">
                         <i class="bi bi-envelope"></i> Email (10082)
                     </a>
                 </div>
                 <div class="col-md-3">
-                    <a href="http://localhost:10083" target="_blank" class="btn btn-outline-primary w-100">
+                    <a id="linkSistemas" href="#" target="_blank" class="btn btn-outline-primary w-100">
                         <i class="bi bi-gear"></i> Sistemas (10083)
                     </a>
                 </div>
                 <div class="col-md-3">
-                    <a href="http://localhost:10084" target="_blank" class="btn btn-outline-primary w-100">
+                    <a id="linkEquipamiento" href="#" target="_blank" class="btn btn-outline-primary w-100">
                         <i class="bi bi-laptop"></i> Equipamiento (10084)
                     </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Configurar links dinámicos a servicios
+        var host = location.hostname;
+        document.getElementById('linkLDAP').href = 'http://' + host + ':10081';
+        document.getElementById('linkEmail').href = 'http://' + host + ':10082';
+        document.getElementById('linkSistemas').href = 'http://' + host + ':10083';
+        document.getElementById('linkEquipamiento').href = 'http://' + host + ':10084';
+        var workflowLink = document.getElementById('linkTemporalWorkflow');
+        if (workflowLink) {
+            var workflowId = workflowLink.getAttribute('data-workflow-id');
+            workflowLink.href = 'http://' + host + ':10088/namespaces/default/workflows/' + workflowId;
+        }
+    </script>
 </th:block>
 </body>
 </html>

@@ -6,7 +6,7 @@
 #   RabbitMQ:       10672 (AMQP), 10673 (Management)
 #   Temporal:       10233
 #   Temporal UI:    10088
-#   App Central:    10080
+#   App Central:    18080
 #   Service LDAP:   10081
 #   Service Email:  10082
 #   Service Sist:   10083
@@ -77,7 +77,7 @@ services:
       - "10088:8080"
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:10080
+      - TEMPORAL_CORS_ORIGINS=http://localhost:18080
     depends_on:
       - temporal
     networks:
@@ -90,7 +90,7 @@ services:
     build: ./app-central
     container_name: onboarding-app-central
     ports:
-      - "10080:8080"
+      - "18080:8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/onboarding_central?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
