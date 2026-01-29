@@ -100,4 +100,12 @@ public class PeticionService {
     public PeticionSistemas guardar(PeticionSistemas peticion) {
         return repository.save(peticion);
     }
+
+    @Transactional
+    public void eliminarPorWorkflowId(String workflowId) {
+        repository.findByWorkflowId(workflowId).ifPresent(peticion -> {
+            repository.delete(peticion);
+            log.info("Petición SISTEMAS eliminada por compensación. WorkflowId: {}", workflowId);
+        });
+    }
 }

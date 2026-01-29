@@ -100,4 +100,12 @@ public class PeticionService {
     public PeticionLdap guardar(PeticionLdap peticion) {
         return repository.save(peticion);
     }
+
+    @Transactional
+    public void eliminarPorWorkflowId(String workflowId) {
+        repository.findByWorkflowId(workflowId).ifPresent(peticion -> {
+            repository.delete(peticion);
+            log.info("Petición LDAP eliminada por compensación. WorkflowId: {}", workflowId);
+        });
+    }
 }

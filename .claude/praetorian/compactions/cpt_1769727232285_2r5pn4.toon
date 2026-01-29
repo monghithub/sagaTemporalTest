@@ -1,0 +1,9 @@
+type: flow_analysis
+title: Saga Compensation Flow in Temporal Onboarding System
+source: sagaTemporalTest project investigation
+key_insights[6]: Saga compensation uses Temporal's Saga pattern with sequential compensation (not parallel),Compensation is triggered when any step is denied or throws an exception,Services use auto-approval for compensation messages (not manual approval),Database entries are NOT deleted - they remain marked with their state,Compensation message uses TipoOperacion.ELIMINAR or REVOCAR,All compensation messages are routed to dedicated compensation queues
+findings[7]: OnboardingWorkflowImpl creates Saga with setParallelCompensation(false),Each step registers compensation callback before execution,"If any step is denied, exception is thrown triggering saga.compensate()",Compensation activities send PeticionCreatedEvent to compensation queues,Service listeners auto-approve compensation and send response,ApprovalResponseListener receives all responses and signals workflow,No database entry deletion - entries remain with their state
+refs[6]: "OnboardingWorkflowImpl:52-55: Saga configuration","OnboardingWorkflowImpl:124-125: Compensation registration","OnboardingWorkflowImpl:163-173: Compensation callback","OnboardingActivitiesImpl:146-158: Compensation send","LdapRequestListener:50-76: Compensation handler","EmailRequestListener:50-76: Compensation handler"
+id: cpt_1769727232285_2r5pn4
+created: "2026-01-29T22:53:52.285Z"
+updated: "2026-01-29T22:53:52.285Z"

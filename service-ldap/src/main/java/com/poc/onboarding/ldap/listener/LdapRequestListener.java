@@ -52,9 +52,10 @@ public class LdapRequestListener {
         log.info("Recibida compensación LDAP: {} - Usuario a eliminar: {}",
                 event.getPeticionId(), event.getEmpleado().getUsernameGenerado());
 
-        // Para compensaciones, auto-aprobar (simular eliminación)
-        // En un sistema real, esto podría requerir aprobación manual también
+        // Eliminar la petición de la base de datos
+        peticionService.eliminarPorWorkflowId(event.getWorkflowId());
 
+        // Enviar respuesta de compensación completada
         Map<String, Object> datos = new HashMap<>();
         datos.put("username_eliminado", event.getEmpleado().getUsernameGenerado());
 
@@ -72,6 +73,6 @@ public class LdapRequestListener {
                 response
         );
 
-        log.info("Compensación LDAP {} procesada automáticamente", event.getPeticionId());
+        log.info("Compensación LDAP {} completada - registro eliminado de BD", event.getPeticionId());
     }
 }

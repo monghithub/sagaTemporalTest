@@ -1,0 +1,676 @@
+{
+  "words": {
+    "124": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "125": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "146": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "158": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "163": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "173": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "3307": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "5673": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "7233": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "8080": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "8081": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "8082": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "8083": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "8084": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "8088": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "saga": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak",
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "pattern": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak",
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "poc": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "issue": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "contexto": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "inicial": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "con": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "temporal": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak",
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "para": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "onboarding": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak",
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "empleados": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "servicios": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "app": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "central": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "mocks": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "ldap": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "email": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "sistemas": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "equipamiento": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "infraestructura": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "server": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "rabbitmq": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "mysql": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "stack": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "java": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "spring": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "boot": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "sdk": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "thymeleaf": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "bootstrap": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "monorepo": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "maven": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "docker": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "compose": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "creacion": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "proyecto": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "spec": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "completa": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "del": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "plan": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "claude": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "plans": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "ticklish": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "soaring": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "island": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "crear": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "estructura": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "base": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "pom": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "xml": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "padre": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "infra": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "yml": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "init": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "sql": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "bds": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "verificar": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "que": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "levanta": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "correctamente": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "implementar": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "por": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "fases": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "empezando": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "usuario": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "prefiere": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "validar": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "antes": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "continuar": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "digo": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "documentar": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "proceso": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "creaci": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "durante": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "implementaci": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "adem": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "documentaci": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "final": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "registrar": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "cada": [
+      "cpt_1769707535923_7dx26p",
+      "cpt_1769713402280_vm7sak"
+    ],
+    "paso": [
+      "cpt_1769707535923_7dx26p"
+    ],
+    "dulos": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "compilando": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "workflow": [
+      "cpt_1769713402280_vm7sak",
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "api": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "rest": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "mock": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "aprobaci": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "comunicaci": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "via": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "queues": [
+      "cpt_1769713402280_vm7sak",
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "patr": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "implementado": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "compensaciones": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "autom": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "ticas": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "sdkman": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "configurado": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "amzn": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "aplicaci": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "principal": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "puerto": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "service": [
+      "cpt_1769713402280_vm7sak",
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "devlog": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "log": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "desarrollo": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "probar": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "ejecutar": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "servicio": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "mvn": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "run": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "aprobar": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "localhost": [
+      "cpt_1769713402280_vm7sak"
+    ],
+    "compensation": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "flow": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "system": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "sagatemporaltest": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "project": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "investigation": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "uses": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "with": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "sequential": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "not": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "parallel": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "triggered": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "when": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "any": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "step": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "denied": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "throws": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "exception": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "services": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "use": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "auto": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "approval": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "for": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "messages": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "manual": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "database": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "entries": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "are": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "deleted": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "they": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "remain": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "marked": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "their": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "state": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "message": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "tipooperacion": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "eliminar": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "revocar": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "all": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "routed": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "dedicated": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "onboardingworkflowimpl": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "creates": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "setparallelcompensation": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "false": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "each": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "registers": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "callback": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "before": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "execution": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "thrown": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "triggering": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "compensate": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "activities": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "send": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "peticioncreatedevent": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "listeners": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "approve": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "and": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "response": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "approvalresponselistener": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "receives": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "responses": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "signals": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "entry": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "deletion": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "configuration": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "registration": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "onboardingactivitiesimpl": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "ldaprequestlistener": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "handler": [
+      "cpt_1769727232285_2r5pn4"
+    ],
+    "emailrequestlistener": [
+      "cpt_1769727232285_2r5pn4"
+    ]
+  },
+  "compactions": {
+    "cpt_1769707535923_7dx26p": {
+      "id": "cpt_1769707535923_7dx26p",
+      "type": "decisions",
+      "title": "Saga Pattern PoC - Issue #1 Contexto Inicial",
+      "created": "2026-01-29T17:25:35.923Z",
+      "updated": "2026-01-29T17:25:35.923Z"
+    },
+    "cpt_1769713402280_vm7sak": {
+      "id": "cpt_1769713402280_vm7sak",
+      "type": "task_result",
+      "title": "Saga Pattern PoC - Implementación Completa",
+      "created": "2026-01-29T19:03:22.280Z",
+      "updated": "2026-01-29T19:03:22.280Z"
+    },
+    "cpt_1769727232285_2r5pn4": {
+      "id": "cpt_1769727232285_2r5pn4",
+      "type": "flow_analysis",
+      "title": "Saga Compensation Flow in Temporal Onboarding System",
+      "created": "2026-01-29T22:53:52.285Z",
+      "updated": "2026-01-29T22:53:52.285Z"
+    }
+  }
+}

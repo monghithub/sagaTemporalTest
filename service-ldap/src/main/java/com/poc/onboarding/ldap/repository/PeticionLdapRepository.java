@@ -18,4 +18,8 @@ public interface PeticionLdapRepository extends JpaRepository<PeticionLdap, Long
     List<PeticionLdap> findByEstadoNotOrderByFechaProcesamiento(EstadoPeticion estado);
 
     List<PeticionLdap> findAllByOrderByFechaCreacionDesc();
+
+    Optional<PeticionLdap> findByWorkflowId(String workflowId);
+
+    void deleteByWorkflowId(String workflowId);
 }

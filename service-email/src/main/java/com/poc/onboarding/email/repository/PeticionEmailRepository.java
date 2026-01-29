@@ -18,4 +18,8 @@ public interface PeticionEmailRepository extends JpaRepository<PeticionEmail, Lo
     List<PeticionEmail> findByEstadoNotOrderByFechaProcesamiento(EstadoPeticion estado);
 
     List<PeticionEmail> findAllByOrderByFechaCreacionDesc();
+
+    Optional<PeticionEmail> findByWorkflowId(String workflowId);
+
+    void deleteByWorkflowId(String workflowId);
 }

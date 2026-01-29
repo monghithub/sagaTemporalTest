@@ -49,14 +49,15 @@ public class EmailRequestListener {
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_EMAIL_COMPENSATE)
     public void handleCompensation(PeticionCreatedEvent event) {
-        log.info("Recibida compensación EMAIL: {} - Usuario a eliminar: {}",
-                event.getPeticionId(), event.getEmpleado().getUsernameGenerado());
+        log.info("Recibida compensación EMAIL: {} - Email a eliminar: {}",
+                event.getPeticionId(), event.getEmpleado().getEmailCorporativo());
 
-        // Para compensaciones, auto-aprobar (simular eliminación)
-        // En un sistema real, esto podría requerir aprobación manual también
+        // Eliminar la petición de la base de datos
+        peticionService.eliminarPorWorkflowId(event.getWorkflowId());
 
+        // Enviar respuesta de compensación completada
         Map<String, Object> datos = new HashMap<>();
-        datos.put("username_eliminado", event.getEmpleado().getUsernameGenerado());
+        datos.put("email_eliminado", event.getEmpleado().getEmailCorporativo());
 
         PeticionResponseEvent response = PeticionResponseEvent.aprobada(
                 event.getPeticionId(),
@@ -72,6 +73,6 @@ public class EmailRequestListener {
                 response
         );
 
-        log.info("Compensación EMAIL {} procesada automáticamente", event.getPeticionId());
+        log.info("Compensación EMAIL {} completada - registro eliminado de BD", event.getPeticionId());
     }
 }

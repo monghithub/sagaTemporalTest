@@ -18,4 +18,8 @@ public interface PeticionEquipamientoRepository extends JpaRepository<PeticionEq
     List<PeticionEquipamiento> findByEstadoNotOrderByFechaProcesamiento(EstadoPeticion estado);
 
     List<PeticionEquipamiento> findAllByOrderByFechaCreacionDesc();
+
+    Optional<PeticionEquipamiento> findByWorkflowId(String workflowId);
+
+    void deleteByWorkflowId(String workflowId);
 }

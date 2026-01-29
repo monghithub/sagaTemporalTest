@@ -100,4 +100,12 @@ public class PeticionService {
     public PeticionEquipamiento guardar(PeticionEquipamiento peticion) {
         return repository.save(peticion);
     }
+
+    @Transactional
+    public void eliminarPorWorkflowId(String workflowId) {
+        repository.findByWorkflowId(workflowId).ifPresent(peticion -> {
+            repository.delete(peticion);
+            log.info("Petición EQUIPAMIENTO eliminada por compensación. WorkflowId: {}", workflowId);
+        });
+    }
 }

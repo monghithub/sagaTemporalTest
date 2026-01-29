@@ -18,4 +18,8 @@ public interface PeticionSistemasRepository extends JpaRepository<PeticionSistem
     List<PeticionSistemas> findByEstadoNotOrderByFechaProcesamiento(EstadoPeticion estado);
 
     List<PeticionSistemas> findAllByOrderByFechaCreacionDesc();
+
+    Optional<PeticionSistemas> findByWorkflowId(String workflowId);
+
+    void deleteByWorkflowId(String workflowId);
 }

@@ -1,0 +1,14 @@
+type: decisions
+title: Saga Pattern PoC - Issue #1 Contexto Inicial
+key_insights[5]: "Issue #1: PoC Saga Pattern con Temporal.io para onboarding de empleados","5 servicios: app-central (8080) + 4 mocks (LDAP 8081, Email 8082, Sistemas 8083, Equipamiento 8084)","Infraestructura: Temporal Server, RabbitMQ, MySQL","Stack: Java 17, Spring Boot 3.2.x, Temporal SDK 1.22.x, Thymeleaf + Bootstrap 5",Monorepo Maven con Docker Compose
+decisions[2]:
+  - chose: Implementar por fases empezando con infraestructura
+    over[2]: Todo completo de una vez,Por fases con pausas
+    reason: Usuario prefiere validar infra antes de continuar con código
+  - chose: Documentar proceso de creación durante implementación
+    reason: "Además de documentación final, registrar cada paso del proceso"
+refs[2]: "Issue #1: Creacion proyecto - spec completa del Saga Pattern","Plan: ~/.claude/plans/ticklish-soaring-island.md"
+next[4]: Crear estructura Maven base (pom.xml padre),Crear docker-compose.infra.yml,Crear init-db.sql con 5 BDs,Verificar que infraestructura levanta correctamente
+id: cpt_1769707535923_7dx26p
+created: "2026-01-29T17:25:35.923Z"
+updated: "2026-01-29T17:25:35.923Z"
