@@ -361,4 +361,12 @@ PETICIÓN RECIBIDA (queue.xxx.request)
 El sistema implementa **consistencia eventual** mediante:
 - Mensajería asíncrona (RabbitMQ)
 - Compensaciones automáticas del patrón Saga
-- Eliminación de datos en rollback para mantener consistencia
+- Marcado de datos como compensados en rollback para mantener trazabilidad
+
+### 7. Contenedores sin Auto-arranque
+
+Los contenedores Docker están configurados con `restart: "no"`:
+- **No se inician automáticamente** al arrancar el sistema
+- Deben iniciarse manualmente con `docker compose up -d`
+- Permite control total sobre cuándo ejecutar el entorno
+- Evita consumo de recursos cuando no se está usando

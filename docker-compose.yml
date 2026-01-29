@@ -1,6 +1,10 @@
 # Docker Compose - Aplicación completa
 # Uso: docker compose up --build
 #
+# IMPORTANTE: Los contenedores NO se reinician automáticamente al arrancar el sistema.
+#             Para iniciarlos manualmente: docker compose up -d
+#             Para pararlos: docker compose down
+#
 # PUERTOS:
 #   MySQL:          10306
 #   RabbitMQ:       10672 (AMQP), 10673 (Management)
@@ -19,6 +23,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: onboarding-mysql
+    restart: "no"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: onboarding
@@ -38,6 +43,7 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: onboarding-rabbitmq
+    restart: "no"
     ports:
       - "10672:5672"
       - "10673:15672"
@@ -57,6 +63,7 @@ services:
   temporal:
     image: temporalio/auto-setup:1.22.4
     container_name: onboarding-temporal
+    restart: "no"
     ports:
       - "10233:7233"
     environment:
@@ -73,6 +80,7 @@ services:
   temporal-ui:
     image: temporalio/ui:2.22.3
     container_name: onboarding-temporal-ui
+    restart: "no"
     ports:
       - "10088:8080"
     environment:
@@ -89,6 +97,7 @@ services:
   app-central:
     build: ./app-central
     container_name: onboarding-app-central
+    restart: "no"
     ports:
       - "18080:8080"
     environment:
@@ -111,6 +120,7 @@ services:
   service-ldap:
     build: ./service-ldap
     container_name: onboarding-service-ldap
+    restart: "no"
     ports:
       - "10081:8081"
     environment:
@@ -130,6 +140,7 @@ services:
   service-email:
     build: ./service-email
     container_name: onboarding-service-email
+    restart: "no"
     ports:
       - "10082:8082"
     environment:
@@ -149,6 +160,7 @@ services:
   service-sistemas:
     build: ./service-sistemas
     container_name: onboarding-service-sistemas
+    restart: "no"
     ports:
       - "10083:8083"
     environment:
@@ -168,6 +180,7 @@ services:
   service-equipamiento:
     build: ./service-equipamiento
     container_name: onboarding-service-equipamiento
+    restart: "no"
     ports:
       - "10084:8084"
     environment:

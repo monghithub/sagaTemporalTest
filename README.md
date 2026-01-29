@@ -56,7 +56,7 @@ Si cualquier paso es denegado, se ejecutan compensaciones en orden inverso.
 ### Levantar Infraestructura
 
 ```bash
-docker-compose -f docker-compose.infra.yml up -d
+docker compose -f docker-compose.infra.yml up -d
 ```
 
 Esto inicia:
@@ -69,10 +69,10 @@ Esto inicia:
 
 ```bash
 # Compilar todo el proyecto
-mvn clean install -DskipTests
+mvn clean package -DskipTests
 
 # Opcion 1: Ejecutar todo con Docker
-docker-compose up --build
+docker compose up --build -d
 
 # Opcion 2: Ejecutar localmente (para desarrollo)
 # Terminal 1 - App Central
@@ -83,6 +83,24 @@ cd service-ldap && mvn spring-boot:run
 cd service-email && mvn spring-boot:run
 cd service-sistemas && mvn spring-boot:run
 cd service-equipamiento && mvn spring-boot:run
+```
+
+### Inicio Manual (sin auto-arranque)
+
+> **IMPORTANTE:** Los contenedores estan configurados con `restart: "no"`, lo que significa que **NO se inician automaticamente** al arrancar el sistema. Debes iniciarlos manualmente cada vez.
+
+```bash
+# Iniciar todos los servicios
+docker compose up -d
+
+# Parar todos los servicios
+docker compose down
+
+# Ver estado de los contenedores
+docker compose ps
+
+# Ver logs
+docker compose logs -f
 ```
 
 ## URLs de Acceso
