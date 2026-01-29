@@ -1,0 +1,96 @@
+# Docker Compose - Solo Infraestructura (para desarrollo local)
+# Uso: docker compose -f docker-compose.infra.yml up -d
+#
+# PUERTOS CONFIGURADOS (para evitar conflictos con otros proyectos):
+#   MySQL: 3307
+#   RabbitMQ: 5673 (AMQP), 15673 (Management)
+#   Temporal: 7233
+#   Temporal UI: 8088
+
+services:
+  # =============================================================================
+  # MySQL - Base de datos principal
+  # =============================================================================
+  mysql:
+    image: mysql:8.0
+    container_name: onboarding-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: onboarding
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - onboarding-network
+
+  # =============================================================================
+  # RabbitMQ - Mensajería
+  # =============================================================================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: onboarding-rabbitmq
+    ports:
+      - "5673:5672"   # AMQP
+      - "15673:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - onboarding-network
+
+  # =============================================================================
+  # Temporal Server - Orquestador de Workflows
+  # =============================================================================
+  temporal:
+    image: temporalio/auto-setup:1.22.4
+    container_name: onboarding-temporal
+    ports:
+      - "7233:7233" # gRPC
+    environment:
+      - DB=mysql8
+      - MYSQL_SEEDS=mysql
+      - MYSQL_USER=root
+      - MYSQL_PWD=root
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - onboarding-network
+
+  # =============================================================================
+  # Temporal UI - Interfaz web para Temporal
+  # =============================================================================
+  temporal-ui:
+    image: temporalio/ui:2.22.3
+    container_name: onboarding-temporal-ui
+    ports:
+      - "8088:8080"
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    depends_on:
+      - temporal
+    networks:
+      - onboarding-network
+
+volumes:
+  mysql_data:
+  rabbitmq_data:
+
+networks:
+  onboarding-network:
+    driver: bridge

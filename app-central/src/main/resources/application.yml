@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: app-central
+
+  # Base de datos
+  datasource:
+    url: jdbc:mysql://localhost:3307/onboarding_central?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+  # RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5673
+    username: guest
+    password: guest
+
+  # Thymeleaf
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+# Temporal
+temporal:
+  service:
+    address: localhost:7233
+  namespace: default
+
+# Logging
+logging:
+  level:
+    com.poc.onboarding: DEBUG
+    io.temporal: INFO

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<th:block th:fragment="content">
+    <!-- Alertas -->
+    <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i> [[${mensaje}]]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> [[${error}]]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item active">Proceso #[[${proceso.id}]]</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-person-badge"></i> [[${proceso.empleadoNombre}]]</h2>
+            <p class="text-muted mb-0">
+                [[${proceso.empleadoEmail}]]
+                <span th:if="${proceso.empleadoDepartamento}"> | [[${proceso.empleadoDepartamento}]]</span>
+                <span th:if="${proceso.empleadoPuesto}"> | [[${proceso.empleadoPuesto}]]</span>
+            </p>
+        </div>
+        <div>
+            <span class="badge fs-5"
+                  th:classappend="${proceso.estado.name() == 'COMPLETADO'} ? 'bg-success' :
+                                   (${proceso.estado.name() == 'EN_PROGRESO'} ? 'bg-primary' :
+                                   (${proceso.estado.name() == 'ROLLBACK'} ? 'bg-danger' :
+                                   (${proceso.estado.name() == 'ERROR'} ? 'bg-danger' : 'bg-secondary')))"
+                  th:text="${proceso.estado}"></span>
+        </div>
+    </div>
+
+    <!-- Timeline de pasos -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Progreso del Onboarding</h5>
+        </div>
+        <div class="card-body">
+            <div class="paso-timeline">
+                <div th:each="paso : ${T(com.poc.onboarding.common.dto.TipoPaso).values()}"
+                     class="paso-item"
+                     th:classappend="${workflowState != null && workflowState.pasoActual == paso} ? 'paso-activo' :
+                                      (${workflowState != null && workflowState.estadoPasos != null && workflowState.estadoPasos.get(paso)?.name() == 'APROBADA'} ? 'paso-aprobado' :
+                                      (${workflowState != null && workflowState.estadoPasos != null && workflowState.estadoPasos.get(paso)?.name() == 'DENEGADA'} ? 'paso-denegado' :
+                                      (${workflowState != null && workflowState.estadoPasos != null && workflowState.estadoPasos.get(paso)?.name() == 'COMPENSADA'} ? 'paso-compensado' : 'paso-pendiente')))">
+                    <div class="paso-circle">
+                        <span th:switch="${paso.ordinal() + 1}">
+                            <i th:case="1" class="bi bi-person"></i>
+                            <i th:case="2" class="bi bi-envelope"></i>
+                            <i th:case="3" class="bi bi-gear"></i>
+                            <i th:case="4" class="bi bi-laptop"></i>
+                        </span>
+                    </div>
+                    <div class="paso-label" th:text="${paso}"></div>
+                    <small class="text-muted d-block"
+                           th:text="${paso.ordinal() == 0} ? 'LDAP/AD' :
+                                    (${paso.ordinal() == 1} ? 'Email Corp.' :
+                                    (${paso.ordinal() == 2} ? 'Sistemas' : 'Equipamiento'))"></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info y acciones -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Workflow ID:</th>
+                            <td><code th:text="${proceso.workflowId}"></code></td>
+                        </tr>
+                        <tr>
+                            <th>Fecha inicio:</th>
+                            <td th:text="${#temporals.format(proceso.fechaInicio, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        </tr>
+                        <tr th:if="${proceso.fechaFin}">
+                            <th>Fecha fin:</th>
+                            <td th:text="${#temporals.format(proceso.fechaFin, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        </tr>
+                        <tr th:if="${workflowState?.usernameGenerado}">
+                            <th>Username:</th>
+                            <td><code th:text="${workflowState.usernameGenerado}"></code></td>
+                        </tr>
+                        <tr th:if="${workflowState?.emailCorporativo}">
+                            <th>Email Corp.:</th>
+                            <td><code th:text="${workflowState.emailCorporativo}"></code></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${proceso.estado.name() == 'EN_PROGRESO'}">
+                        <form th:action="@{'/proceso/' + ${proceso.id} + '/rollback'}" method="post" class="mb-3">
+                            <button type="submit" class="btn btn-danger w-100"
+                                    onclick="return confirm('¿Seguro que deseas cancelar este proceso? Se ejecutarán las compensaciones.')">
+                                <i class="bi bi-x-octagon"></i> Solicitar Rollback
+                            </button>
+                        </form>
+                        <p class="text-muted small">
+                            El rollback cancelará el proceso y revertirá todos los pasos completados.
+                        </p>
+                    </div>
+
+                    <div th:if="${proceso.estado.name() != 'EN_PROGRESO'}">
+                        <p class="text-muted">
+                            <i class="bi bi-info-circle"></i>
+                            El proceso ha finalizado. No hay acciones disponibles.
+                        </p>
+                    </div>
+
+                    <!-- Links útiles -->
+                    <hr>
+                    <p class="mb-2"><strong>Enlaces útiles:</strong></p>
+                    <a th:href="'http://localhost:8088/namespaces/default/workflows/' + ${proceso.workflowId}"
+                       target="_blank" class="btn btn-outline-secondary btn-sm me-2">
+                        <i class="bi bi-diagram-3"></i> Ver en Temporal UI
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de pasos -->
+    <div class="card mt-4" th:if="${not #lists.isEmpty(proceso.pasos)}">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-list-check"></i> Historial de Pasos</h5>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Paso</th>
+                        <th>Estado</th>
+                        <th>Petición ID</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Mensaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="paso : ${proceso.pasos}">
+                        <td th:text="${paso.tipoPaso}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${paso.estado.name() == 'APROBADA'} ? 'bg-success' :
+                                                   (${paso.estado.name() == 'PENDIENTE'} ? 'bg-warning' :
+                                                   (${paso.estado.name() == 'DENEGADA'} ? 'bg-danger' : 'bg-secondary'))"
+                                  th:text="${paso.estado}"></span>
+                        </td>
+                        <td><code th:text="${paso.peticionId}"></code></td>
+                        <td th:text="${paso.fechaInicio != null} ? ${#temporals.format(paso.fechaInicio, 'HH:mm:ss')} : '-'"></td>
+                        <td th:text="${paso.fechaFin != null} ? ${#temporals.format(paso.fechaFin, 'HH:mm:ss')} : '-'"></td>
+                        <td th:text="${paso.mensajeError}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Links a servicios mock -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-link-45deg"></i> Servicios Mock (para aprobar/denegar)</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <a href="http://localhost:8081" target="_blank" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-person"></i> LDAP (8081)
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="http://localhost:8082" target="_blank" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-envelope"></i> Email (8082)
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="http://localhost:8083" target="_blank" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-gear"></i> Sistemas (8083)
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="http://localhost:8084" target="_blank" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-laptop"></i> Equipamiento (8084)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

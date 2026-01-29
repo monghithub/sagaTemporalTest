@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - App Central</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .paso-timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 2rem 0;
+        }
+        .paso-timeline::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #dee2e6;
+            z-index: 0;
+        }
+        .paso-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .paso-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .paso-pendiente .paso-circle {
+            background: #6c757d;
+            color: white;
+        }
+        .paso-activo .paso-circle {
+            background: #0d6efd;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+        .paso-aprobado .paso-circle {
+            background: #198754;
+            color: white;
+        }
+        .paso-denegado .paso-circle,
+        .paso-compensado .paso-circle {
+            background: #dc3545;
+            color: white;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .estado-badge {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-person-badge"></i> Onboarding Central
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="http://localhost:8088" target="_blank">
+                    <i class="bi bi-diagram-3"></i> Temporal UI
+                </a>
+                <a class="nav-link" href="http://localhost:15673" target="_blank">
+                    <i class="bi bi-envelope"></i> RabbitMQ
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        <th:block th:replace="${content}" />
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        // Auto-refresh cada 5 segundos si hay procesos activos
+        if (document.querySelector('.paso-activo')) {
+            setTimeout(() => location.reload(), 5000);
+        }
+    </script>
+</body>
+</html>
