@@ -230,13 +230,95 @@ GROUP BY estado;
 
 ## Herramientas de Cliente
 
-### DBeaver
+### DBeaver (Recomendado)
 
-1. Nueva conexion → MySQL
-2. Host: `localhost`
-3. Puerto: `10306`
-4. Usuario: `root`
-5. Password: `rootpassword`
+#### Paso 1: Nueva Conexion
+
+1. Menu: **Database** → **New Database Connection**
+2. Seleccionar **MySQL** → Click **Next**
+
+#### Paso 2: Configuracion de Conexion
+
+| Campo | Valor |
+|-------|-------|
+| Server Host | `localhost` |
+| Port | `10306` |
+| Database | *(dejar vacio para ver todas)* |
+| Username | `root` |
+| Password | `rootpassword` |
+
+#### Paso 3: Configuracion del Driver
+
+Si es la primera vez, DBeaver pedira descargar el driver de MySQL:
+- Click en **Download** cuando aparezca el dialogo
+
+#### Paso 4: Probar Conexion
+
+1. Click en **Test Connection...**
+2. Deberia mostrar: "Connected"
+3. Click **Finish**
+
+#### Navegacion en DBeaver
+
+Una vez conectado, en el panel izquierdo veras:
+
+```
+MySQL - localhost:10306
+├── Databases
+│   ├── onboarding_central
+│   │   └── Tables
+│   │       ├── paso_proceso
+│   │       └── proceso_onboarding
+│   ├── onboarding_ldap
+│   │   └── Tables
+│   │       └── peticion_ldap
+│   ├── onboarding_email
+│   │   └── Tables
+│   │       └── peticion_email
+│   ├── onboarding_sistemas
+│   │   └── Tables
+│   │       └── peticion_sistemas
+│   └── onboarding_equip
+│       └── Tables
+│           └── peticion_equipamiento
+```
+
+#### Ver Datos de una Tabla
+
+1. Expande el schema (ej: `onboarding_central`)
+2. Expande `Tables`
+3. Doble-click en la tabla (ej: `proceso_onboarding`)
+4. Se abre pestana con los datos
+
+#### Ejecutar SQL en DBeaver
+
+1. Click derecho en la conexion → **SQL Editor** → **Open SQL Script**
+2. Escribe tu consulta
+3. **Ctrl+Enter** para ejecutar
+
+#### Consultas Rapidas para Copiar
+
+```sql
+-- Ver todos los procesos
+SELECT * FROM onboarding_central.proceso_onboarding ORDER BY fecha_inicio DESC;
+
+-- Ver pasos de un proceso
+SELECT * FROM onboarding_central.paso_proceso WHERE proceso_id = 1;
+
+-- Ver peticiones LDAP pendientes
+SELECT * FROM onboarding_ldap.peticion_ldap WHERE estado = 'PENDIENTE';
+
+-- Ver todas las peticiones de un workflow
+SELECT 'LDAP' as servicio, estado, fecha_creacion FROM onboarding_ldap.peticion_ldap WHERE workflow_id = 'onboarding-xxx'
+UNION ALL
+SELECT 'EMAIL', estado, fecha_creacion FROM onboarding_email.peticion_email WHERE workflow_id = 'onboarding-xxx'
+UNION ALL
+SELECT 'SISTEMAS', estado, fecha_creacion FROM onboarding_sistemas.peticion_sistemas WHERE workflow_id = 'onboarding-xxx'
+UNION ALL
+SELECT 'EQUIPAMIENTO', estado, fecha_creacion FROM onboarding_equip.peticion_equipamiento WHERE workflow_id = 'onboarding-xxx';
+```
+
+---
 
 ### MySQL Workbench
 
