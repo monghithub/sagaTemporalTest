@@ -9,18 +9,18 @@
 | Host | localhost |
 | Puerto | 10306 |
 | Usuario | root |
-| Password | rootpassword |
+| Password | root |
 
 ### Conexion via CLI
 
 ```bash
-mysql -h localhost -P 10306 -u root -prootpassword
+mysql -h localhost -P 10306 -u root -proot
 ```
 
 ### Conexion via Docker
 
 ```bash
-docker exec -it temporal-mysql mysql -u root -prootpassword
+docker exec -it temporal-mysql mysql -u root -proot
 ```
 
 ## Schemas Disponibles
@@ -245,7 +245,7 @@ GROUP BY estado;
 | Port | `10306` |
 | Database | *(dejar vacio para ver todas)* |
 | Username | `root` |
-| Password | `rootpassword` |
+| Password | `root` |
 
 #### Paso 3: Configuracion del Driver
 
@@ -339,7 +339,7 @@ SELECT 'EQUIPAMIENTO', estado, fecha_creacion FROM onboarding_equip.peticion_equ
 3. Hostname: `localhost`
 4. Port: `10306`
 5. Username: `root`
-6. Password: `rootpassword`
+6. Password: `root`
 
 ### IntelliJ IDEA / DataGrip
 
@@ -347,7 +347,7 @@ SELECT 'EQUIPAMIENTO', estado, fecha_creacion FROM onboarding_equip.peticion_equ
 2. Host: `localhost`
 3. Port: `10306`
 4. User: `root`
-5. Password: `rootpassword`
+5. Password: `root`
 
 ## Limpiar Datos de Prueba
 

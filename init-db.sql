@@ -19,5 +19,12 @@ CREATE DATABASE IF NOT EXISTS onboarding_sistemas CHARACTER SET utf8mb4 COLLATE 
 -- Base de datos para Service Equipamiento
 CREATE DATABASE IF NOT EXISTS onboarding_equip CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- =============================================================================
+-- Permisos para conexiones remotas (DBeaver, etc.)
+-- =============================================================================
+CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
 -- Mensaje de confirmación
 SELECT 'Todas las bases de datos han sido creadas correctamente' AS mensaje;
