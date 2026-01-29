@@ -27,6 +27,7 @@ Si cualquier paso es denegado, se ejecutan compensaciones en orden inverso.
 | Documento | Descripcion |
 |-----------|-------------|
 | [Arquitectura](docs/ARCHITECTURE.md) | Vision general del sistema, componentes y decisiones de diseno |
+| [Base de Datos](docs/DATABASE.md) | Conexion a MySQL, schemas, tablas y consultas utiles |
 | [App Central](docs/APP-CENTRAL.md) | Aplicacion principal, workflow Temporal y API |
 | [Service LDAP](docs/SERVICE-LDAP.md) | Servicio mock de Active Directory |
 | [Service Email](docs/SERVICE-EMAIL.md) | Servicio mock de correo corporativo |
@@ -123,6 +124,7 @@ sagaTemporalTest/
 ├── init-db.sql                # Inicializacion de BDs
 ├── docs/                      # Documentacion
 │   ├── ARCHITECTURE.md
+│   ├── DATABASE.md
 │   ├── APP-CENTRAL.md
 │   ├── SERVICE-LDAP.md
 │   ├── SERVICE-EMAIL.md
