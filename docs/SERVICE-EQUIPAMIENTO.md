@@ -64,6 +64,14 @@ service-equipamiento/
 - **Cola**: `queue.equip.compensate`
 - **Routing Key**: `equip.compensate`
 
+Cuando llega una compensacion:
+1. Busca la peticion original por `workflowId`
+2. **ELIMINA el registro de la base de datos**
+3. Envia respuesta de compensacion completada
+4. No requiere intervencion manual (automatico)
+
+> **Nota:** En la practica, Equipamiento rara vez recibe compensaciones ya que es el ultimo paso. Solo ocurriria si se implementara un rollback manual.
+
 ## Equipamiento Simulado
 
 Este servicio simula asignar:
@@ -156,34 +164,42 @@ La denegacion en este punto tiene el mayor impacto porque:
 ### Diagrama de Compensacion Completa
 
 ```
-Equipamiento DENEGADO
-        │
-        ▼
-┌───────────────────────────────────────────────┐
-│ Compensar Equipamiento (nada que hacer)       │
-└───────────────────────────────────────────────┘
+Equipamiento DENEGADO (registro queda con estado=DENEGADA)
         │
         ▼
 ┌───────────────────────────────────────────────┐
 │ Compensar Sistemas                            │
-│ → Eliminar accesos a ERP, CRM, etc.           │
+│ → DELETE de peticion_sistemas                 │
+│ → Registro ELIMINADO de BD                    │
 └───────────────────────────────────────────────┘
         │
         ▼
 ┌───────────────────────────────────────────────┐
 │ Compensar Email                               │
-│ → Eliminar cuenta jgonzalez@empresa.com       │
+│ → DELETE de peticion_email                    │
+│ → Registro ELIMINADO de BD                    │
 └───────────────────────────────────────────────┘
         │
         ▼
 ┌───────────────────────────────────────────────┐
 │ Compensar LDAP                                │
-│ → Eliminar usuario jgonzalez del AD           │
+│ → DELETE de peticion_ldap                     │
+│ → Registro ELIMINADO de BD                    │
 └───────────────────────────────────────────────┘
         │
         ▼
 Workflow termina con estado ROLLBACK
 ```
+
+### Estado de las BDs tras Rollback
+
+| Servicio | Estado de la BD |
+|----------|-----------------|
+| LDAP | Sin registro (eliminado por compensacion) |
+| Email | Sin registro (eliminado por compensacion) |
+| Sistemas | Sin registro (eliminado por compensacion) |
+| Equipamiento | Registro con estado=DENEGADA (causo el rollback) |
+| Central | Proceso con estado=ROLLBACK |
 
 ## Consideraciones de Negocio
 

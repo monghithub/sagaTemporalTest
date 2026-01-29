@@ -33,6 +33,56 @@ docker exec -it temporal-mysql mysql -u root -proot
 | `onboarding_sistemas` | Service Sistemas | Peticiones de accesos a sistemas |
 | `onboarding_equip` | Service Equipamiento | Peticiones de asignacion de equipos |
 
+**Importante:** Cada servicio gestiona su propia persistencia de forma **independiente**. Ver seccion "Ciclo de Vida de los Datos" mas abajo.
+
+## Ciclo de Vida de los Datos
+
+### Persistencia por Servicio
+
+Cada servicio mock tiene su propia base de datos y gestiona el ciclo de vida de sus datos:
+
+```
+FLUJO NORMAL (Happy Path)
+─────────────────────────
+Peticion recibida → INSERT (PENDIENTE) → Aprobacion → UPDATE (APROBADA) → Dato PERSISTE
+
+
+FLUJO CON ROLLBACK (Compensacion)
+─────────────────────────────────
+Peticion recibida → INSERT (PENDIENTE) → Aprobacion → UPDATE (APROBADA)
+                                                            │
+                                    [Paso posterior denegado]
+                                                            │
+                                                            ▼
+                                    Compensacion recibida → DELETE → Dato ELIMINADO
+```
+
+### Que Pasa en Cada Escenario
+
+| Escenario | LDAP | Email | Sistemas | Equipamiento | Central |
+|-----------|------|-------|----------|--------------|---------|
+| **Todo aprobado** | APROBADA | APROBADA | APROBADA | APROBADA | COMPLETADO |
+| **Denegado en LDAP** | DENEGADA | - | - | - | ROLLBACK |
+| **Denegado en Email** | ~~ELIMINADO~~ | DENEGADA | - | - | ROLLBACK |
+| **Denegado en Sistemas** | ~~ELIMINADO~~ | ~~ELIMINADO~~ | DENEGADA | - | ROLLBACK |
+| **Denegado en Equipamiento** | ~~ELIMINADO~~ | ~~ELIMINADO~~ | ~~ELIMINADO~~ | DENEGADA | ROLLBACK |
+
+> ~~ELIMINADO~~ significa que el registro fue borrado de la BD por la compensacion.
+
+### Verificar Estado tras Rollback
+
+```sql
+-- Ver procesos con rollback
+SELECT * FROM onboarding_central.proceso_onboarding WHERE estado = 'ROLLBACK';
+
+-- Verificar que no hay datos en servicios compensados
+-- (Estas consultas deberian devolver 0 filas para workflows con rollback)
+SELECT * FROM onboarding_ldap.peticion_ldap WHERE workflow_id = 'onboarding-xxx';
+SELECT * FROM onboarding_email.peticion_email WHERE workflow_id = 'onboarding-xxx';
+SELECT * FROM onboarding_sistemas.peticion_sistemas WHERE workflow_id = 'onboarding-xxx';
+SELECT * FROM onboarding_equip.peticion_equipamiento WHERE workflow_id = 'onboarding-xxx';
+```
+
 ## Consultas Utiles
 
 ### Listar todas las bases de datos

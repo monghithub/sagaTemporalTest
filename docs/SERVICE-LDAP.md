@@ -83,9 +83,22 @@ Cuando llega una peticion:
 - **Routing Key**: `ldap.compensate`
 
 Cuando llega una compensacion:
-1. Se procesa automaticamente (simula eliminacion del usuario)
-2. Envia respuesta aprobada inmediatamente
-3. No requiere intervencion manual
+1. Busca la peticion original por `workflowId`
+2. **ELIMINA el registro de la base de datos**
+3. Envia respuesta de compensacion completada
+4. No requiere intervencion manual (automatico)
+
+```java
+@RabbitListener(queues = RabbitMQConfig.QUEUE_LDAP_COMPENSATE)
+public void handleCompensation(PeticionCreatedEvent event) {
+    // 1. Eliminar la peticion de la BD
+    peticionService.eliminarPorWorkflowId(event.getWorkflowId());
+
+    // 2. Enviar respuesta de compensacion completada
+    PeticionResponseEvent response = PeticionResponseEvent.aprobada(...);
+    rabbitTemplate.convertAndSend(...);
+}
+```
 
 ## Servicio de Peticiones
 
@@ -195,6 +208,37 @@ mock-service:
 - **Tabla**: `peticion_ldap`
 
 Las tablas se crean automaticamente via Hibernate (`ddl-auto: update`).
+
+### Ciclo de Vida de los Datos
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                   PERSISTENCIA EN LDAP                        │
+└──────────────────────────────────────────────────────────────┘
+
+1. PETICIÓN RECIBIDA
+   └─► INSERT en peticion_ldap (estado=PENDIENTE)
+
+2. APROBACIÓN MANUAL
+   └─► UPDATE estado=APROBADA
+       └─► Dato PERSISTE en BD
+
+3. DENEGACIÓN MANUAL
+   └─► UPDATE estado=DENEGADA
+       └─► Workflow inicia compensaciones de pasos anteriores
+       └─► Este registro PERSISTE (fue el que causo el rollback)
+
+4. COMPENSACIÓN RECIBIDA (rollback de otro paso posterior)
+   └─► DELETE del registro
+       └─► Dato ELIMINADO de BD
+```
+
+| Situacion | Accion en BD |
+|-----------|--------------|
+| Nueva peticion | `INSERT` con estado PENDIENTE |
+| Usuario aprueba | `UPDATE` estado a APROBADA |
+| Usuario deniega | `UPDATE` estado a DENEGADA |
+| Compensacion (rollback) | `DELETE` del registro |
 
 ## Diagrama de Secuencia
 

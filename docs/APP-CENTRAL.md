@@ -89,6 +89,36 @@ public String ejecutarOnboarding(EmpleadoDTO empleado) {
 }
 ```
 
+### Flujo de Compensación (Rollback)
+
+Cuando un paso es denegado, se ejecutan compensaciones en **orden inverso**:
+
+```
+Ejemplo: Denegado en SISTEMAS (pasos 1-2 ya completados)
+
+1. Workflow detecta denegación → lanza excepción
+2. saga.compensate() inicia compensaciones:
+   │
+   ├─► compensarPaso(SISTEMAS)
+   │   └─► Envia mensaje a queue.sistemas.compensate
+   │       └─► Service Sistemas ELIMINA registro de su BD
+   │
+   ├─► compensarPaso(EMAIL)
+   │   └─► Envia mensaje a queue.email.compensate
+   │       └─► Service Email ELIMINA registro de su BD
+   │
+   └─► compensarPaso(LDAP)
+       └─► Envia mensaje a queue.ldap.compensate
+           └─► Service LDAP ELIMINA registro de su BD
+
+3. Workflow termina con estado ROLLBACK
+```
+
+**Resultado del rollback:**
+- Cada servicio compensado **elimina sus datos** de su BD
+- El proceso en App Central queda con estado `ROLLBACK`
+- Solo el paso que denegó mantiene su registro (estado=DENEGADA)
+
 ### Signals para Aprobaciones
 
 Cada paso espera un Signal de aprobación:

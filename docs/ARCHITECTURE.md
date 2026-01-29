@@ -77,12 +77,20 @@ Broker de mensajería para comunicación asíncrona:
 
 ### 5. MySQL (Puerto 10306)
 
-Base de datos compartida con schemas separados:
-- `onboarding_central` - Estado de procesos
-- `onboarding_ldap` - Peticiones LDAP
-- `onboarding_email` - Peticiones Email
-- `onboarding_sistemas` - Peticiones Sistemas
-- `onboarding_equip` - Peticiones Equipamiento
+Base de datos compartida con **schemas independientes por servicio**:
+
+| Schema | Servicio | Tabla Principal |
+|--------|----------|-----------------|
+| `onboarding_central` | App Central | `proceso_onboarding`, `paso_proceso` |
+| `onboarding_ldap` | Service LDAP | `peticion_ldap` |
+| `onboarding_email` | Service Email | `peticion_email` |
+| `onboarding_sistemas` | Service Sistemas | `peticion_sistemas` |
+| `onboarding_equip` | Service Equipamiento | `peticion_equipamiento` |
+
+**Cada servicio gestiona su propia persistencia** de forma independiente, lo que permite:
+- Aislamiento de datos entre servicios
+- Escalabilidad independiente
+- Posibilidad de usar diferentes tecnologias de BD por servicio
 
 ## Flujo del Patrón Saga
 
@@ -121,7 +129,7 @@ Base de datos compartida con schemas separados:
 ### Compensación (Denegación en algún paso)
 
 ```
-1-4. Pasos anteriores completados...
+1-4. Pasos anteriores completados (datos guardados en BD de cada servicio)
        │
        ▼
 5. Activity: Crear petición SISTEMAS
@@ -131,15 +139,51 @@ Base de datos compartida con schemas separados:
        ▼
 6. Ejecutar compensaciones en orden inverso:
        │
-       ├──► Compensar SISTEMAS  ──► RabbitMQ ──► Service Sistemas
+       ├──► Compensar SISTEMAS  ──► RabbitMQ ──► Service Sistemas ──► ELIMINA de BD
        │
-       ├──► Compensar EMAIL     ──► RabbitMQ ──► Service Email
+       ├──► Compensar EMAIL     ──► RabbitMQ ──► Service Email    ──► ELIMINA de BD
        │
-       └──► Compensar LDAP      ──► RabbitMQ ──► Service LDAP
+       └──► Compensar LDAP      ──► RabbitMQ ──► Service LDAP     ──► ELIMINA de BD
        │
        ▼
 7. Workflow termina con estado ROLLBACK
 ```
+
+### Detalle del Flujo de Compensación
+
+Cuando un paso es denegado, se ejecuta el siguiente flujo para cada servicio que completó su paso:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         FLUJO DE COMPENSACIÓN                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+App Central                    RabbitMQ                    Service Mock
+     │                            │                             │
+     │  PeticionCreatedEvent      │                             │
+     │  (tipoOperacion=ELIMINAR)  │                             │
+     │───────────────────────────►│                             │
+     │                            │  queue.xxx.compensate       │
+     │                            │────────────────────────────►│
+     │                            │                             │
+     │                            │                 ┌───────────┴───────────┐
+     │                            │                 │ 1. Buscar petición    │
+     │                            │                 │    por workflowId     │
+     │                            │                 │ 2. ELIMINAR de BD     │
+     │                            │                 │ 3. Preparar respuesta │
+     │                            │                 └───────────┬───────────┘
+     │                            │                             │
+     │                            │  PeticionResponseEvent      │
+     │                            │◄────────────────────────────│
+     │  Signal aprobarPaso        │                             │
+     │◄───────────────────────────│                             │
+     │                            │                             │
+```
+
+**Resultado de la compensación:**
+- Los datos de la petición se **eliminan permanentemente** de la BD del servicio
+- El workflow recibe confirmación de que la compensación se completó
+- El proceso continúa con la siguiente compensación (orden inverso)
 
 ## Comunicación por Mensajes
 
@@ -245,3 +289,73 @@ Cada servicio tiene su propio schema:
 El frontend hace refresh automático pero:
 - Solo si no hay modales abiertos
 - Evita interrumpir la experiencia de usuario
+
+### 5. Persistencia y Ciclo de Vida de Datos
+
+Cada servicio mock gestiona su propia persistencia de forma independiente:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    CICLO DE VIDA DE DATOS POR SERVICIO                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+PETICIÓN RECIBIDA (queue.xxx.request)
+        │
+        ▼
+┌───────────────────┐
+│ CREAR registro    │
+│ estado=PENDIENTE  │
+│ en BD del servicio│
+└─────────┬─────────┘
+          │
+          ▼
+    ┌─────────────┐
+    │  APROBACIÓN │
+    │   MANUAL    │
+    └──────┬──────┘
+           │
+     ┌─────┴─────┐
+     │           │
+     ▼           ▼
+┌─────────┐  ┌─────────┐
+│ APROBAR │  │ DENEGAR │
+└────┬────┘  └────┬────┘
+     │            │
+     ▼            ▼
+┌─────────┐  ┌─────────────────┐
+│ UPDATE  │  │ UPDATE estado   │
+│ estado= │  │ =DENEGADA       │
+│ APROBADA│  │ Workflow inicia │
+└────┬────┘  │ compensaciones  │
+     │       └────────┬────────┘
+     │                │
+     ▼                ▼
+┌─────────┐  ┌─────────────────┐
+│ Dato    │  │ COMPENSACIÓN    │
+│ PERSISTE│  │ recibida        │
+│ en BD   │  │ (queue.xxx.     │
+└─────────┘  │  compensate)    │
+             └────────┬────────┘
+                      │
+                      ▼
+             ┌─────────────────┐
+             │ DELETE registro │
+             │ de la BD        │
+             └─────────────────┘
+```
+
+**Resumen del estado de datos:**
+
+| Escenario | Estado en BD del Servicio |
+|-----------|---------------------------|
+| Petición pendiente | Registro con `estado=PENDIENTE` |
+| Paso aprobado | Registro con `estado=APROBADA` (persiste) |
+| Paso denegado | Registro con `estado=DENEGADA` (persiste) |
+| Compensación ejecutada | **Registro ELIMINADO de la BD** |
+
+### 6. Consistencia Eventual
+
+El sistema implementa **consistencia eventual** mediante:
+- Mensajería asíncrona (RabbitMQ)
+- Compensaciones automáticas del patrón Saga
+- Eliminación de datos en rollback para mantener consistencia

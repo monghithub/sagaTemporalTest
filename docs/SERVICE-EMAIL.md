@@ -84,7 +84,23 @@ Cuando llega una peticion:
 - **Cola**: `queue.email.compensate`
 - **Routing Key**: `email.compensate`
 
-Las compensaciones se procesan automaticamente simulando la eliminacion de la cuenta de correo.
+Cuando llega una compensacion:
+1. Busca la peticion original por `workflowId`
+2. **ELIMINA el registro de la base de datos**
+3. Envia respuesta de compensacion completada
+4. No requiere intervencion manual (automatico)
+
+```java
+@RabbitListener(queues = RabbitMQConfig.QUEUE_EMAIL_COMPENSATE)
+public void handleCompensation(PeticionCreatedEvent event) {
+    // 1. Eliminar la peticion de la BD
+    peticionService.eliminarPorWorkflowId(event.getWorkflowId());
+
+    // 2. Enviar respuesta de compensacion completada
+    PeticionResponseEvent response = PeticionResponseEvent.aprobada(...);
+    rabbitTemplate.convertAndSend(...);
+}
+```
 
 ## Servicio de Peticiones
 
@@ -157,6 +173,17 @@ mock-service:
 
 - **Schema**: `onboarding_email`
 - **Tabla**: `peticion_email`
+
+### Ciclo de Vida de los Datos
+
+| Situacion | Accion en BD |
+|-----------|--------------|
+| Nueva peticion | `INSERT` con estado PENDIENTE |
+| Usuario aprueba | `UPDATE` estado a APROBADA |
+| Usuario deniega | `UPDATE` estado a DENEGADA + compensar LDAP |
+| Compensacion (rollback) | `DELETE` del registro |
+
+**En caso de rollback:** Si un paso posterior (Sistemas o Equipamiento) es denegado, este servicio recibe un mensaje de compensacion que **elimina el registro** de la BD.
 
 ## Dependencia con LDAP
 

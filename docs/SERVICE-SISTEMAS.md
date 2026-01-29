@@ -64,6 +64,12 @@ service-sistemas/
 - **Cola**: `queue.sistemas.compensate`
 - **Routing Key**: `sistemas.compensate`
 
+Cuando llega una compensacion:
+1. Busca la peticion original por `workflowId`
+2. **ELIMINA el registro de la base de datos**
+3. Envia respuesta de compensacion completada
+4. No requiere intervencion manual (automatico)
+
 ## Sistemas Simulados
 
 Este servicio simula otorgar acceso a:
@@ -104,6 +110,17 @@ mock-service:
 
 - **Schema**: `onboarding_sistemas`
 - **Tabla**: `peticion_sistemas`
+
+### Ciclo de Vida de los Datos
+
+| Situacion | Accion en BD |
+|-----------|--------------|
+| Nueva peticion | `INSERT` con estado PENDIENTE |
+| Usuario aprueba | `UPDATE` estado a APROBADA |
+| Usuario deniega | `UPDATE` estado a DENEGADA + compensar Email y LDAP |
+| Compensacion (rollback) | `DELETE` del registro |
+
+**En caso de rollback:** Si Equipamiento es denegado, este servicio recibe un mensaje de compensacion que **elimina el registro** de la BD.
 
 ## Dependencia con Pasos Anteriores
 
