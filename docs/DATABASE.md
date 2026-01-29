@@ -252,7 +252,19 @@ GROUP BY estado;
 Si es la primera vez, DBeaver pedira descargar el driver de MySQL:
 - Click en **Download** cuando aparezca el dialogo
 
-#### Paso 4: Probar Conexion
+#### Paso 4: Solucionar "Public Key Retrieval is not allowed"
+
+1. En la ventana de conexion, click en la pestana **Driver properties**
+2. Busca la propiedad `allowPublicKeyRetrieval`
+3. Cambia el valor a `true`
+4. (Opcional) Tambien puedes poner `useSSL` en `false` si da problemas de SSL
+
+| Propiedad | Valor |
+|-----------|-------|
+| allowPublicKeyRetrieval | `true` |
+| useSSL | `false` |
+
+#### Paso 5: Probar Conexion
 
 1. Click en **Test Connection...**
 2. Deberia mostrar: "Connected"
