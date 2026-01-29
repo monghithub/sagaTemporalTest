@@ -16,9 +16,14 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="bi bi-people"></i> Procesos de Onboarding</h2>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevoProcesoModal">
-            <i class="bi bi-plus-circle"></i> Nuevo Onboarding
-        </button>
+        <div>
+            <button class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#limpiarBasesModal">
+                <i class="bi bi-trash"></i> Limpiar BD
+            </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevoProcesoModal">
+                <i class="bi bi-plus-circle"></i> Nuevo Onboarding
+            </button>
+        </div>
     </div>
 
     <!-- Tabla de procesos -->
@@ -119,6 +124,40 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Limpieza BD -->
+    <div class="modal fade" id="limpiarBasesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle"></i> Confirmar Limpieza</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">Esta accion eliminara <strong>TODOS</strong> los datos de:</p>
+                    <ul>
+                        <li>Procesos de onboarding (App Central)</li>
+                        <li>Peticiones LDAP</li>
+                        <li>Peticiones Email</li>
+                        <li>Peticiones Sistemas</li>
+                        <li>Peticiones Equipamiento</li>
+                    </ul>
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>Esta accion no se puede deshacer.</strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form th:action="@{/limpiar-bases}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Si, Limpiar Todo
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

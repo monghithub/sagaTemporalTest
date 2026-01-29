@@ -1,6 +1,7 @@
 package com.poc.onboarding.central.controller;
 
 import com.poc.onboarding.central.entity.ProcesoOnboarding;
+import com.poc.onboarding.central.service.DatabaseCleanupService;
 import com.poc.onboarding.central.service.OnboardingService;
 import com.poc.onboarding.central.workflow.OnboardingState;
 import com.poc.onboarding.common.dto.EmpleadoDTO;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class DashboardController {
 
     private final OnboardingService onboardingService;
+    private final DatabaseCleanupService databaseCleanupService;
 
     /**
      * Página principal - Dashboard con lista de procesos
@@ -97,5 +99,19 @@ public class DashboardController {
                     return "redirect:/proceso/" + id;
                 })
                 .orElse("redirect:/");
+    }
+
+    /**
+     * Limpiar todas las bases de datos (desarrollo/testing)
+     */
+    @PostMapping("/limpiar-bases")
+    public String limpiarBases(RedirectAttributes redirectAttributes) {
+        try {
+            String resultado = databaseCleanupService.limpiarTodasLasBases();
+            redirectAttributes.addFlashAttribute("mensaje", resultado);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al limpiar bases: " + e.getMessage());
+        }
+        return "redirect:/";
     }
 }
